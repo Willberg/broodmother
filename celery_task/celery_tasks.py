@@ -6,8 +6,8 @@ app = Celery(
     backend='redis://root:test123@192.168.0.105:6379/4',
     # 包含以下两个任务文件，去相应的py文件中找任务，对多个任务做分类
     include=[
-        # 'celery_task.rtz.rtz',
-        'celery_task.add.add',
+        'celery_task.rtz_test.rtz_test',
+        # 'celery_task.add.add',
     ]
 )
 

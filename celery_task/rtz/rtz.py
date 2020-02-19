@@ -1,12 +1,6 @@
 import json
 
 import requests
-from celery import Celery
-
-# amqp://myuser:mypassword@localhost:5672/myvhost
-from celery_task.utils.rabbit import rabbit_connect, rabbit_message_process
-
-app = Celery('rtz', broker='amqp://root:123456@192.168.0.105:5672/rtz')
 
 
 def process_message(ch, method, properties, body):
@@ -21,11 +15,4 @@ def process_message(ch, method, properties, body):
     res = requests.put('http://127.0.0.1:10002/api/fs/v1/rtz/save', headers=headers, data=req_data)
 
     # 发送确认,删除消息
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-
-
-@app.task
-def insert_to_db():
-    # 从rabbit取数据
-    rabbit_connect('192.168.0.105', 5672, 'root', '123456', 'rtz')
-    rabbit_message_process('rtz', 'topic', 'rtz', 'rtz.images', process_message)
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
