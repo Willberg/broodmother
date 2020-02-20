@@ -24,7 +24,7 @@
 from test.rabbit.sample.rabbit import RabbitMQ
 
 # RabbitMQ类的初始化参数，包括broker_ip, port, username, password, vhost
-args = ("192.168.0.105", 5672, "root", "123456", "/")
+args = ("192.168.0.105", 5672, "root", "123456", "rtz")
 mq = RabbitMQ(*args)  # 传入初始化参数
 mq.connect()  # 调用connect方法，连接broker
 
