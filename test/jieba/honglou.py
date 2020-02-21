@@ -45,15 +45,18 @@ def get_stop_word_set():
     return stop_word_set
 
 
-def save_cut_word(word_dict, file_path):
+def save_cut_word(sort_list, file_path):
     with open(file_path, 'w') as f:
-        for k, v in word_dict.items():
-            f.write('%s %s\n' % (k, str(v)))
+        for word in sort_list:
+            f.write('%s %s\n' % (word[0], str(word[1])))
 
 
-def sort_words(word_dict, counts):
-    sort_word_list = sorted(word_dict.items(), key=lambda x: x[1], reverse=True)
-    sort_word_list = sort_word_list[:counts]
+def get_sort_dict(word_dict):
+    return sorted(word_dict.items(), key=lambda x: x[1], reverse=True)
+
+
+def get_cut_words(sort_list, counts):
+    sort_word_list = sort_list[:counts]
     print('分析的词: \n')
     ret_list = list()
     i = 1
@@ -87,10 +90,11 @@ def generate_word_img(word_list, save_img_path):
 
 def generate_new_word_cloud_img():
     word_dict = cut_word('/home/john/tmp/words/wordcloud/txt/hongloumeng.txt')
+    sort_word_list = get_sort_dict(word_dict)
     save_cut_word_path = '/home/john/tmp/words/wordcloud/dict/hongloumeng'
     if not os.path.exists(save_cut_word_path):
-        save_cut_word(word_dict, save_cut_word_path)
-    word_list = sort_words(word_dict, 200)
+        save_cut_word(sort_word_list, save_cut_word_path)
+    word_list = get_cut_words(sort_word_list, 200)
     generate_word_img(word_list, '/home/john/tmp/words/wordcloud/hongloumeng.jpeg')
 
 
