@@ -23,8 +23,7 @@ cel.conf.beat_schedule = {
     # },
     'update_rtz_index_every_day': {
         'task': 'celery_contab.es.elastic_task.create_index',
-        'schedule': crontab(minute='*/1'),
-        'args': (1, 2)
+        'schedule': crontab(minute='*/5')
     },
 }
 
