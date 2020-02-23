@@ -16,11 +16,16 @@ cel.conf.enable_utc = False
 
 # 配置定时任务和该执行的任务
 cel.conf.beat_schedule = {
+    # 'add_every_2_minute': {
+    #     'task': 'celery_contab.add.add.add',
+    #     'schedule': crontab(minute='*/1'),
+    #     'args': (1, 2)
+    # },
     'update_rtz_index_every_day': {
-        'task': 'celery_contab.add.add.add',
+        'task': 'celery_contab.es.elastic_task.create_index',
         'schedule': crontab(minute='*/1'),
         'args': (1, 2)
-    }
+    },
 }
 
 # celery -A celery_contab beat 发布任务
