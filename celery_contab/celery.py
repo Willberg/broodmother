@@ -7,7 +7,8 @@ cel = Celery(
     broker='amqp://root:123456@192.168.0.105:5672/rtz',
     backend='redis://root:test123@192.168.0.105:6379/4',
     include=[
-        'celery_contab.add.add',
+        # 'celery_contab.add.add',
+        'celery_contab.es.elastic_task',
     ]
 )
 
@@ -23,7 +24,7 @@ cel.conf.beat_schedule = {
     # },
     'update_rtz_index_every_day': {
         'task': 'celery_contab.es.elastic_task.create_index',
-        'schedule': crontab(minute='*/5')
+        'schedule': crontab(minute='*/1')
     },
 }
 
