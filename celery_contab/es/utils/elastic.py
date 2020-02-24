@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch
-from elasticsearch.helpers import parallel_bulk
+from elasticsearch.helpers import parallel_bulk, bulk
 
 
 class Elastic:
@@ -43,7 +43,7 @@ class Elastic:
         return ret
 
     # 批量插入数据
-    def bulk_index_data(self, index_name, data_list):
+    def parallel_bulk_index_data(self, index_name, data_list):
         actions = []
         for data in data_list:
             action = {
@@ -53,6 +53,18 @@ class Elastic:
             actions.append(action)
 
         return parallel_bulk(self.es, actions=actions)
+
+    # 批量插入数据
+    def bulk_index_data(self, index_name, data_list):
+        actions = []
+        for data in data_list:
+            action = {
+                '_index': index_name,
+                '_source': data
+            }
+            actions.append(action)
+
+        return bulk(self.es, actions=actions)
 
     # 解析词
     def analyze_token(self, text, analyzer='ik_smart'):
@@ -154,15 +166,16 @@ if __name__ == '__main__':
     search_data = {
         "query": {
             "term": {
-                "family": "测试"
+                "family": "工作"
             }
         },
         "sort": {
             "marks": "desc"
         },
+        "size": 100
     }
     res = es.search_index_data('rtz', search_data)
     print(res)
 
-    # res = es.delete_index_data('rtz', 'LUYwcnAB4gNzbB9u8kqT')
-    # print(res)
+    res = es.delete_index_data('rtz', 'LUYwcnAB4gNzbB9u8kqT')
+    print(res)

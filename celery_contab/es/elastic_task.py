@@ -1,3 +1,5 @@
+import time
+
 from celery_contab.celery import cel
 from celery_contab.es.utils.elastic import Elastic
 from celery_contab.es.utils.rtz_db import DbCorporation
@@ -6,7 +8,8 @@ from celery_contab.es.utils.rtz_db import DbCorporation
 def create_index_struct(es):
     index_body = {
         "settings": {
-            "index.analysis.analyzer.default.type": "ik_smart"
+            "index.analysis.analyzer.default.type": "ik_smart",
+            "number_of_replicas": "0"  # 在本地没有备份
         },
         "mappings": {
             "properties": {
@@ -79,7 +82,13 @@ def insert_data_to_es(es, data_list):
 
 @cel.task
 def create_index():
+    start_time = int(time.time())
     es = Elastic()
+    # 删除索引
+    res = es.delete_index('rtz')
+    print(res)
+
+    # 创建索引
     create_index_struct(es)
 
     db = DbCorporation()
@@ -89,8 +98,11 @@ def create_index():
         max_val += 1
 
     for i in range(max_val):
+        print('进度： %.4f \n' % float(i / max_val) * 100)
         data_list = get_data_from_db(db, i)
         insert_data_to_es(es, data_list)
+
+    print('耗时： %.2f' % ((int(time.time()) - start_time) / 60.0))
 
 
 if __name__ == '__main__':
