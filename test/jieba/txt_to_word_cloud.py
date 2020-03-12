@@ -89,13 +89,14 @@ def generate_word_img(word_list, save_img_path):
 
 
 def generate_new_word_cloud_img():
-    word_dict = cut_word('/home/john/tmp/words/wordcloud/txt/hongloumeng.txt')
+    fs_name = 'shanhaijin'
+    word_dict = cut_word('/home/john/tmp/words/wordcloud/txt/%s.txt' % fs_name)
     sort_word_list = get_sort_dict(word_dict)
-    save_cut_word_path = '/home/john/tmp/words/wordcloud/dict/hongloumeng'
+    save_cut_word_path = '/home/john/tmp/words/wordcloud/dict/%s' % fs_name
     if not os.path.exists(save_cut_word_path):
         save_cut_word(sort_word_list, save_cut_word_path)
     word_list = get_cut_words(sort_word_list, 200)
-    generate_word_img(word_list, '/home/john/tmp/words/wordcloud/hongloumeng.jpeg')
+    generate_word_img(word_list, '/home/john/tmp/words/wordcloud/%s.jpeg' % fs_name)
 
 
 def test_generate_word_img():
